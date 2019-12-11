@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
     //TODO broadcast la universe.atom->pos - pentru toti atomii modificati de proces
 
-    prg_begin=clock();
+prg_begin=clock();
 
     double buf[3];
     for (i=0; i<(universe.atom_nb); ++i){
@@ -162,8 +162,8 @@ int main(int argc, char **argv)
         universe.atom[i].pos.z = buf[2];
     }
 
-    prg_end=clock();
-    total_time_bcast += (double)(prg_end-prg_begin)/(double)CLK_TCK);
+prg_end=clock();
+    total_time_bcast += (double)(prg_end-prg_begin) / (double) CLOCKS_PER_SEC;
 
 
     universe.time += args.timestep;
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
   puts(TEXT_SIMEND);
   universe_clean(&universe);
 
-      printf("%lf seconds in bcast procedure...",(double)total_time_bcast);
+  printf("%lf seconds in bcast procedure...",(double)total_time_bcast);
 
   // Finalizare MPI
   MPI_Finalize();
