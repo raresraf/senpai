@@ -20,6 +20,9 @@
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MODE_NUMERICAL           1
 
+time_t prg_begin,prg_end;
+
+double total_time_bcast = 0;
 
 int main(int argc, char **argv)
 {
@@ -146,6 +149,8 @@ int main(int argc, char **argv)
 
     //TODO broadcast la universe.atom->pos - pentru toti atomii modificati de proces
 
+    prg_begin=clock();
+
     double buf[3];
     for (i=0; i<(universe.atom_nb); ++i){
         buf[0] = universe.atom[i].pos.x;
@@ -156,6 +161,11 @@ int main(int argc, char **argv)
         universe.atom[i].pos.y = buf[1];
         universe.atom[i].pos.z = buf[2];
     }
+
+    prg_end=clock();
+    total_time_bcast += (double)(prg_end-prg_begin)/(double)CLK_TCK);
+
+
     universe.time += args.timestep;
     ++(universe.iterations);
   }
@@ -163,6 +173,8 @@ int main(int argc, char **argv)
   /* End of simulation */
   puts(TEXT_SIMEND);
   universe_clean(&universe);
+
+      printf("%lf seconds in bcast procedure...",(double)total_time_bcast);
 
   // Finalizare MPI
   MPI_Finalize();
